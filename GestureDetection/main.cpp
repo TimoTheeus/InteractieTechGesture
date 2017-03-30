@@ -24,6 +24,7 @@ Mat skin;
 //amount f bins
 int bins = 25;
 int findBiggestContour(vector<vector<Point> >);
+Mat returnBlurred(Mat);
 
 int main()
 {
@@ -54,26 +55,21 @@ int main()
 	  video_capture >> frame;
 	//convert to hsv
 	  cvtColor(frame, hsv, COLOR_BGR2HSV);
-	  Scalar min = (0, 10, 60);
-	  Scalar max = (50, 0.68, 255);
 	  inRange(hsv, Scalar(0, 10, 60), Scalar(20, 150, 255), skin);
 	  imshow("skin", skin);
 	  vector<vector<Point> > contours;
 	  vector<Vec4i> hierarchy;
 	  findContours(skin, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
-	  int s = findBiggestContour(contours);
-
 	  Mat drawing = Mat::zeros(frame.size(), CV_8UC1);
 	  for (int i = 0; i < contours.size(); i++) {
 		  drawContours(drawing, contours, i, Scalar(255), -1, 8, hierarchy, 0, Point());
 	  }
-
 	  imshow("drw", drawing);
 	  video_writer << frame;
 	  // Show the frame image
 	  imshow(WEBCAM_WINDOW, frame);
 	  // Get the keyboard input and wait 10ms to allow timely writing
-	  key = waitKey(10);
+	  key = waitKey(100);
   }
 
   // Release the video_writer (finish writing)
@@ -82,6 +78,22 @@ int main()
   destroyAllWindows(); 
 }
 
+Mat returnEroded(Mat input,int erosion_size) {
+	Mat eroded = Mat::zeros(frame.size(), CV_8UC1);
+	Mat element = getStructuringElement(MORPH_RECT,
+		Size(2 * erosion_size + 1, 2 * erosion_size + 1),
+		Point(erosion_size, erosion_size));
+	erode(input, eroded, element);
+	return eroded;
+}
+Mat returnBlurred(Mat input) {
+	Mat blurred = Mat::zeros(frame.size(), CV_8UC1);
+	for (int i = 1; i < 31; i = i + 2)
+	{
+		blur(input, blurred, Size(i, i), Point(-1, -1));
+	}
+	return blurred;
+}
 int findBiggestContour(vector<vector<Point> > contours) {
 	int indexOfBiggestContour = -1;
 	int sizeOfBiggestContour = 0;
