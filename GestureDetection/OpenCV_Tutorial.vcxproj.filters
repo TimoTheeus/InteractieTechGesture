@@ -24,12 +24,18 @@
     <ClCompile Include="Video.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Serial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Helper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Video.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
